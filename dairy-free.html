@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dairy-Free — Remove Annoying Popups</title>
+  <meta name="description" content="Dairy-Free removes annoying popups so the web feels clean again. Simple, elegant, and lightweight." />
+  <meta property="og:title" content="Dairy-Free — Remove Annoying Popups" />
+  <meta property="og:description" content="Dairy-Free removes annoying popups so the web feels clean again. Simple, elegant, and lightweight." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/png" href="icon.png" />
+  <style>
+    :root{
+      --bg: #0b1220; /* slate-950 */
+      --bg-soft: #0f172a; /* slate-900 */
+      --text: #e5e7eb; /* gray-200 */
+      --muted: #9ca3af; /* gray-400 */
+      --brand: #7c3aed; /* violet-600 */
+      --brand-2: #22d3ee; /* cyan-400 */
+      --card: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.12);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius-xl: 22px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1800px 1000px at 50% -200px,
+          rgba(124,58,237,.20) 0%,
+          rgba(34,211,238,.10) 40%,
+          transparent 80%),
+        var(--bg);
+      background-attachment: fixed;
+      line-height: 1.6;
+      letter-spacing: 0.2px;
+      padding-top: 80px; /* header space */
+    }
+    a{ color: inherit; text-decoration: none; }
+    .container{ width: min(1100px, 92%); margin: 0 auto; }
+
+    /* Header */
+    header{
+      position: fixed; top:0; left:0; width:100%; z-index:100;
+      background: rgba(11,18,32,0.92);
+      backdrop-filter: saturate(1.1) blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    }
+    .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 0; gap:16px; }
+    .nav-left{ display:flex; align-items:center; gap:14px; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
+    .brand-logo{ width:28px; height:28px; display:grid; place-items:center; border-radius:10px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: var(--shadow); }
+    .byline{ font-size:12px; color:var(--muted); }
+    .byline a{ color:var(--muted); text-decoration: underline transparent; }
+    .byline a:hover{ color:var(--text); text-decoration-color: rgba(255,255,255,.4); }
+
+    .nav-links{ display:flex; gap:22px; align-items:center; }
+    .nav-links a{ color: var(--muted); font-weight:500; }
+    .nav-links a:hover{ color: var(--text); }
+    .btn{ display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:14px; border:1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); color: var(--text); font-weight:600; box-shadow: var(--shadow); }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn-primary{ background: linear-gradient(180deg, rgba(124,58,237,.9), rgba(124,58,237,.7)); border-color: rgba(124,58,237,.5); }
+
+    /* Hero */
+    .hero{ padding: 80px 0 40px; text-align:center; }
+    h1{ font-size: clamp(36px, 6vw, 64px); line-height:1.08; margin:0 0 12px; letter-spacing: .2px; }
+    .lead{ font-size: clamp(16px, 2.6vw, 20px); color: var(--muted); max-width: 760px; margin: 0 auto 28px; }
+    .cta{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+    .card{ border:1px solid var(--border); background: var(--card); border-radius: 18px; padding:22px; box-shadow: var(--shadow); }
+    .icon{ width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background: linear-gradient(135deg, var(--brand), var(--brand-2)); margin-bottom:10px; }
+    h3{ margin:6px 0 8px; font-size:22px; }
+    .muted{ color: var(--muted); }
+
+    /* Layout helpers */
+    section{ padding: 70px 0; position: relative; scroll-margin-top: 90px; }
+    .grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; }
+    .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+
+    /* Smooth continuous bg */
+    .section-soft { background: none !important; }
+    .section-soft::before { content:none !important; display:none !important; }
+    section { padding: clamp(48px, 8vw, 80px) 0; }
+
+    .section-title { margin: 0 0 18px; display: flex; align-items: center; gap: 12px; }
+    .section-title .rule { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(255,255,255,.2), rgba(255,255,255,0)); }
+
+    /* GIF frame */
+    .embed-frame{ border:1px dashed rgba(255,255,255,.28); background: rgba(255,255,255,.04); border-radius: 16px; display:grid; place-items:center; height: 420px; font-size:14px; color: var(--muted); }
+
+    /* Donate button */
+    .bmc-btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; font-size:12px; line-height:1;
+      border:none; border-radius:8px; cursor:pointer;
+      font-family:inherit; font-weight:600; color:#fff; text-decoration:none;
+      background: linear-gradient(270deg, var(--brand), var(--brand-2), var(--brand));
+      background-size:200% 200%; animation: gradientMove 5s ease infinite;
+      transition: box-shadow .3s ease, transform .2s ease;
+      box-shadow: 0 3px 12px rgba(124,58,237,.25);
+    }
+    .bmc-btn:hover{ box-shadow:0 0 12px 5px rgba(124,58,237,.45); transform: translateY(-1px); }
+    .bmc-btn:active{ transform: translateY(1px); box-shadow:0 0 8px 3px rgba(124,58,237,.35); }
+    .bmc-btn .icon{ font-size:14px; line-height:1; }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    footer{ padding: 40px 0 80px; color: var(--muted); border-top:1px solid var(--border); }
+
+    /* Compact cards for How-it-works */
+    .card-compact{ padding:16px 16px; }
+    .card-compact h3{ font-size:18px; margin:4px 0 6px; }
+    .card-compact p{ font-size:14px; line-height:1.5; }
+    .how-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    .how-grid + .how-grid{ margin-top:16px; } /* space between the two rows */
+
+    /* Responsive */
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+      .grid-2{ grid-template-columns: 1fr; }
+      .how-grid{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px){
+      .grid{ grid-template-columns: 1fr; }
+      .nav-links{ display:none; }
+      .hero{ padding-top: 56px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="nav-left">
+        <a class="brand" href="#top">
+          <img src="icon.png" alt="Dairy-Free" style="width:40px;height:40px;border-radius:8px;">
+          <span>Dairy-Free</span>
+        </a>
+        <!-- New byline -->
+        <div class="byline">By <a href="https://your-main-site.example" target="_blank" rel="noopener">YOUR NAME</a></div>
+      </div>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#donate">Donate</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn-primary" href="#" aria-label="Download Chrome Extension">Download</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main id="top" class="hero container">
+    <h1>Make the web feel clean again</h1>
+    <p class="lead">No more navigating through complicated menus or undoing a hundred sliders just to avoid giving away your data — hide cookie popups in a few clicks with Dairy-Free.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#">Download Chrome Extension</a>
+      <a class="btn" href="#features">View features</a>
+    </div>
+  </main>
+
+  <!-- Features -->
+  <section id="features" class="section-soft">
+    <div class="container">
+      <h2 class="section-title">
+        <span>Features</span> <span class="rule"></span>
+      </h2>
+      <div class="grid">
+        <div class="card">
+          <div class="icon" aria-hidden="true">🛡️</div>
+          <h3>Never Accepts Cookies</h3>
+          <p class="muted">Dairy-Free never automatically accepts cookies on your behalf — it hides the popup so you can browse with your privacy intact.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">🫵</div>
+          <h3>You're In Control</h3>
+          <p class="muted">The code only runs when you explicitly trigger it with a simple two-click procedure, ensuring you remain in control at all times.</p>
+        </div>
+        <div class="card">
+          <div class="icon" aria-hidden="true">💸</div>
+          <h3>Completely Free</h3>
+          <p class="muted">No hidden costs, no subscriptions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" class="section-soft">
+    <div class="container">
+      <h2 class="section-title">
+        <span>How it works</span> <span class="rule"></span>
+      </h2>
+
+      <!-- Row 1: Download instructions -->
+      <div class="how-grid">
+        <div class="card card-compact">
+          <div class="icon" aria-hidden="true">⬇️</div>
+          <h3>1) Get it from the Chrome Web Store</h3>
+          <p class="muted">Open the Chrome Web Store and search for <strong>Dairy-Free</strong>, or click the download button above to go directly to the listing.</p>
+        </div>
+        <div class="card card-compact">
+          <div class="icon" aria-hidden="true">📌</div>
+          <h3>2) Pin the extension</h3>
+          <p class="muted">Click the puzzle-piece icon beside the address bar, find <strong>Dairy-Free</strong>, and click the pin to keep it handy.</p>
+        </div>
+      </div>
+
+      <!-- Row 2: Usage instructions -->
+      <div class="how-grid">
+        <div class="card card-compact">
+          <div class="icon" aria-hidden="true">🖱️</div>
+          <h3>3) Use it when a popup appears</h3>
+          <p class="muted">On any page showing an overlay or cookie banner, click the <strong>Dairy-Free</strong> toolbar icon and hit <em>Remove Popup</em>.</p>
+        </div>
+        <div class="card card-compact">
+          <div class="icon" aria-hidden="true">💡</div>
+          <h3>4) Quick tips</h3>
+          <p class="muted">If a page misbehaves, refresh the tab. You can always disable Dairy-Free per-site from the toolbar menu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Donations -->
+  <section id="donate" class="section-soft">
+    <div class="container">
+      <h2 class="section-title">
+        <span>Support development</span> <span class="rule"></span>
+      </h2>
+      <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;">
+        <div style="max-width:700px">
+          <p class="muted" style="margin:0">
+            Dairy-Free is built and maintained by a solo student developer. If you find it useful, you can help keep the project alive with a donation.
+          </p>
+        </div>
+        <a
+          class="bmc-btn"
+          href="https://www.buymeacoffee.com/jesssilver"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Buy jess a coffee"
+        >
+          <span class="icon">☕</span> Buy Jess A Coffee
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section-soft">
+    <div class="container">
+      <h2 class="section-title">
+        <span>Frequently asked</span> <span class="rule"></span>
+      </h2>
+      <details class="card">
+        <summary><strong>What browser does it work for?</strong></summary>
+        <p class="muted">Dairy-Free is available as a <b>Chrome</b> extension.</p>
+      </details>
+      <details class="card">
+        <summary><strong>Does it store my data?</strong></summary>
+        <p class="muted">No. The Chrome extension works on the client-side; we don't collect or store any user data.</p>
+      </details>
+      <details class="card">
+        <summary><strong>Will it break sites?</strong></summary>
+        <p class="muted">Dairy-Free isn't perfect and may run into issues with some sites. If it does, simply reload the page (⌘R on macOS, Ctrl+R on Windows, or click the reload icon).</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div>
+        <div class="brand" style="gap:8px">
+          <img src="icon.png" style="width:25px;height:25px;" alt="">
+          <strong>Dairy-Free</strong>
+        </div>
+        <p class="muted" style="margin-top:8px">Because browsing should feel calm.</p>
+      </div>
+      <nav style="display:flex; gap:16px">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#donate">Donate</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href');
+        if(id.length > 1){
+          e.preventDefault();
+          document.querySelector(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      })
+    });
+
+    // Download handler — replace with real store link
+    document.querySelectorAll('#download, a[href="#"]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        if (btn.getAttribute('href') === '#') {
+          e.preventDefault();
+          alert('Hook this up to your Chrome Web Store / Add-ons page.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
